@@ -1000,11 +1000,18 @@ async function loadSlots(date) {
   try {
     const service  = encodeURIComponent(booking.service_type || '');
     const res      = await fetch(`${BACKEND_URL}/api/availability?date=${date}&service=${service}`);
-    if (!res.ok) throw new Error('API error');
-    const data     = await res.json();
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `Server error ${res.status}`);
+    }
+    const data = await res.json();
     renderSlots(data.slots || []);
-  } catch {
-    content.innerHTML = '<div class="slots-error">Could not load available times. Please try again.</div>';
+  } catch (e) {
+    console.error('[availability]', e);
+    const msg = e.message === 'Failed to fetch'
+      ? 'Cannot reach the server. Make sure it is running.'
+      : (e.message || 'Could not load available times. Please try again.');
+    content.innerHTML = `<div class="slots-error">${esc(msg)}</div>`;
   }
 }
 
