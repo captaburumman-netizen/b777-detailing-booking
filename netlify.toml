@@ -1,0 +1,22 @@
+[build]
+  publish = "frontend"
+
+# ── Proxy /admin to Railway (server injects ADMIN_PASSWORD) ────
+[[redirects]]
+  from   = "/admin"
+  to     = "https://YOUR-APP.railway.app/admin"
+  status = 200
+  force  = true
+
+# ── Proxy all API calls to Railway backend ──────────────────────
+[[redirects]]
+  from   = "/api/*"
+  to     = "https://YOUR-APP.railway.app/api/:splat"
+  status = 200
+  force  = true
+
+# ── SPA fallback (serves index.html for unknown paths) ─────────
+[[redirects]]
+  from   = "/*"
+  to     = "/index.html"
+  status = 200
