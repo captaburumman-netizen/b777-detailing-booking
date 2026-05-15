@@ -5,3 +5,6 @@ database/bookings.db-shm
 database/bookings.db-wal
 *.log
 .DS_Store
+
+# Local Netlify folder
+.netlify
